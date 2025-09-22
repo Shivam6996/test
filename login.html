@@ -21,7 +21,7 @@ button{width:100%;padding:12px;margin-top:12px;border-radius:8px;border:0;font-w
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// <-- Replace with your firebaseConfig from Firebase console -->
+// 1. Replace with your Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyC_KqYOD1QkQXiTpiRi7L3QsO-cwrsrUXA",
   authDomain: "roblox-shop-1878d.firebaseapp.com",
@@ -33,15 +33,31 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// check if user already logged in
+// 2. List of admin emails
+const adminEmails = ["your.email@example.com"];
+
+// 3. Handle login redirect only if on login page
 onAuthStateChanged(auth, user => {
-  if(user) window.location.href='admin.html';
+  if(user && window.location.pathname.endsWith('login.html')){
+    if(adminEmails.includes(user.email)){
+      window.location.href = 'admin.html';
+    } else {
+      alert("You are logged in but not authorized as admin.");
+      auth.signOut();
+    }
+  }
 });
 
+// 4. Google login button
 document.getElementById("googleBtn").addEventListener("click", async () => {
   try {
     const result = await signInWithPopup(auth, provider);
-    window.location.href = "admin.html";
+    if(adminEmails.includes(result.user.email)){
+      window.location.href = 'admin.html';
+    } else {
+      alert("You are logged in but not authorized as admin.");
+      auth.signOut();
+    }
   } catch(err) {
     alert(err.message);
   }
