@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Roblox ID Shop</title>
+<style>
+body{font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;background:#f5f6f6}
+.card{padding:30px;border-radius:12px;background:#fff;box-shadow:0 8px 30px rgba(0,0,0,.08);text-align:center;}
+button{width:100%;padding:12px;margin-top:12px;border-radius:8px;border:0;font-weight:600;cursor:pointer}
+.google-btn{background:#fff;color:#111;border:1px solid #ccc}
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>Sign in to Admin</h2>
+  <button id="googleBtn" class="google-btn">Continue with Google</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// <-- Replace with your firebaseConfig from Firebase console -->
+const firebaseConfig = {
+  apiKey: "AIzaSyC_KqYOD1QkQXiTpiRi7L3QsO-cwrsrUXA",
+  authDomain: "roblox-shop-1878d.firebaseapp.com",
+  projectId: "roblox-shop-1878d",
+  appId: "1:675280968126:web:ccbfcb4f28fe69f74841ef"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+// check if user already logged in
+onAuthStateChanged(auth, user => {
+  if(user) window.location.href='admin.html';
+});
+
+document.getElementById("googleBtn").addEventListener("click", async () => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    window.location.href = "admin.html";
+  } catch(err) {
+    alert(err.message);
+  }
+});
+</script>
+</body>
+</html>
